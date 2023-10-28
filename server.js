@@ -20,11 +20,10 @@ app.post('/callfunction', async(req, res) => {
     if (!contract_address || !abi || !rpc_url || !function_name) {
         return res.status(400).send({ error: 'All required parameters are not provided' });
     }
-    // Inisialisasi web3
     const web3 = new Web3(new Web3.providers.HttpProvider(rpc_url));
 
-    // Inisialisasi kontrak
-    const contract = new web3.eth.Contract(JSON.parse(abi), contract_address);
+    const abiJson = typeof abi === 'string' ? JSON.parse(abi) : abi;
+    const contract = new web3.eth.Contract(abiJson, contract_address);
 
     try {
         const result = await contract.methods[function_name](...function_args).call();
